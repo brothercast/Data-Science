@@ -29,7 +29,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
 
 def load_data(database_filepath):
-    '''
+    """
     Load data from sql-database at database_filepath
     
     Parameters:
@@ -38,7 +38,7 @@ def load_data(database_filepath):
         X: np-array of text-strings for further processing/tokenization/creating features
         Y: np-array of categories as target for features
         category_names: Categorical name for labeling.
-    '''
+    """
     
     # read data from sql-db into pandas-dataframe
     engine = create_engine('sqlite:///' + database_filepath)
@@ -68,7 +68,7 @@ def tokenize(text):
     return clean_tokens
 
 def build_model():
-    '''
+    """
     Creates a pre-defined sklearn-model/pipeline using
     - CountVectorizes (with function tokenize)
     - TfidTransformer
@@ -83,7 +83,7 @@ def build_model():
         None
     Returns:
         model: sklearn-Pipeline
-    '''
+    """
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
@@ -101,7 +101,7 @@ def build_model():
     
         
 def evaluate_model(model, X_test, Y_test, category_names):
-    '''
+    """
     Evaluate and print (multioutput) sklearn-model 
     using test features and category labels)
     
@@ -112,7 +112,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
         category_names: list of names of (multioutput) labels
     Returns:
         None
-    '''
+    """
     Y_pred=model.predict(X_test)
 
     for i in range(33):
@@ -121,19 +121,28 @@ def evaluate_model(model, X_test, Y_test, category_names):
         
 
 def save_model(model, model_filepath):
-    '''
+    """
     Saves model as pickle file at model_filepath.
     
     Parameters:
-        model: anything
-        model_filepath: path as string
-    '''
+        model: Name of sklearn-model
+        model_filepath: Filepath as string
+    """
     
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
     
 
 def main():
+    """
+    Main function for training and evaluating model.
+    Loads data from sql-database, trains model, evaluates model, saves model.
+    
+    Parameters:
+        None
+    Returns:
+        None
+    """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
