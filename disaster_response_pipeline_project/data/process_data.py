@@ -1,57 +1,70 @@
 import sys
-import numpy as np
+import sqlite3
 import pandas as pd
-
-# Additional Packages
-import re
-import sys
-import pickle
-import matplotlib.pyplot as plt
+import numpy as np
 from sqlalchemy import create_engine
 
-url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
-
 def load_data(messages_filepath, categories_filepath):
-    # read files into dataframes 
-    messages = pd.read_csv(messages_filepath)
-    categories = pd.read_csv(categories_filepath)  
+    """Loads & merges messages & categories datasets from CSV files.
     
-    return messages, categories
+    Input:
+    messages_filepath - Filepath for CSV file containing messages dataset.
+    categories_filepath -  Filepath for CSV file containing categories dataset.
+       
+    Output:
+    df - Pandas DataFrame, containing merged content of message and categories datasets.
+    """
+    #read datasets
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    df = pd.merge(messages, categories, on='id')
+    return df
 
 def clean_data(df):
-    df = pd.merge(messages, categories, on='id')
-
-    # create a dataframe of the 36 individual category columns
-    categories = df.categories.str.split(';',expand=True)
-
-    # select the first row of the categories dataframe
-    row = categories.iloc[0]
-
-    # extract a list of new column names for categories from this row.
-    category_colnames = row.str.split('-').str.get(0)
-
-    # rename the columns of `categories`
-    categories.rename(columns=category_colnames, inplace=True)
-
-    for column in categories:
-        # set each value to be the last character of the string
-        categories[column] = categories[column].str.split('-').str.get(1)
+    '''
+    Cleans 'df' Dataframe and returns 'clean_df' 
     
-        # convert column from string to numeric
-        categories[column] = categories[column].astype(str)
+    Parameters:
+        df - Pandas DataFrame created in load_data()
+    
+    Returns:
+        clean_df - Pandas DataFrame with cleaned data
+    '''
+    # Extract message data
+    messages_df = df[['id', 'message', 'original', 'genre']]
+    
+    # extract and clean category column labels 
+    categories_df = df['categories'].str.split(";", expand=True)
+    categories_colnames = [item[:-2] for item in categories_df.loc[0]]
+    categories_df.columns = categories_colnames
+    for column in categories_df:
+        categories_df[column] = categories_df[column].apply(lambda x: x[-1]).astype(int)
+   
+        # Replace categories column in df with new category columns.  
+    clean_df = pd.concat([messages_df, categories_df], axis=1)
+    
+    # drop the original related column from `df`
+    clean_df.drop(columns=['related'], inplace=True)
+        
+    # drop duplicates
+    clean_df = clean_df.drop_duplicates()
 
-        # drop the original categories column from `df`
-        df = df.drop('categories', axis = 1)
-
-        # concatenate the original dataframe with the new `categories` dataframe
-        df = df.join(categories, on='id')
-
-        # drop duplicates
-        df.drop_duplicates(inplace=True)
+    return clean_df
 
 def save_data(df, database_filename):
+    '''
+    Save dataframe as SQLite database.
+    
+    Input:
+    df - Cleaned dataframe with merged message and category data.
+    database_filename - Text string filename passed as database output name.
+       
+    outputs:
+    None
+    '''
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql('data', engine, index=False)  
+    df.to_sql('DisasterResponse', engine, if_exists = 'replace', index=False)  
+
 
 def main():
     if len(sys.argv) == 4:

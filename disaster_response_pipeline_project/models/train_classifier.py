@@ -18,8 +18,8 @@ from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 
 # Scikit-Learn
+import joblib
 from sklearn.svm import LinearSVC
-from sklearn.externals import joblib
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multioutput import MultiOutputClassifier
