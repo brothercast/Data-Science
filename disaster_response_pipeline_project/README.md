@@ -38,4 +38,4 @@ app/templates/: Templates for the web app.
 app/run.py: Start the Python server for the web app and prepare visualizations.
 
 ### Author 
-[https://github.com/brothercast](Tone Pettit)
+[Tone Pettit](https://github.com/brothercast)
