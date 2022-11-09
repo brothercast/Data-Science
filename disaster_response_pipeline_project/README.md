@@ -14,6 +14,9 @@ The ML pipeline is used to train a model using GridSearchCV, evaluate its perfor
 #### Web App: Disaster Response Project
 A Flask web application that takes an input message and classifies it into categories. The web app also displays visualizations of the data in form of graphs and charts.
 
+<img src="https://github.com/brothercast/Data-Science/blob/master/disaster_response_pipeline_project/img/DizRespApp2.png" width="400">
+<img src="https://github.com/brothercast/Data-Science/blob/master/disaster_response_pipeline_project/img/DizRespApp.png width="400">
+
 ### Instructions:
 1) Run the following commands in the project's root directory to set up your database and model.
     - Run the ETL pipeline to clean and tokenize the data and store it in a database:
