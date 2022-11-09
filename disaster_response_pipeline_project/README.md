@@ -16,10 +16,26 @@ A Flask web application that takes an input message and classifies it into categ
 
 ### Instructions:
 1) Run the following commands in the project's root directory to set up your database and model.
-    - Run ETL pipeline that cleans data and stores in database:
+    - Run the ETL pipeline to clean and tokenize the data and store it in a database:
     
     ```python3 process_data.py disaster_messages.csv disaster_categories.csv DisasterResponseDB```
     
-    - Run the Machine Learning pipeline that trains classifier and saves the model as a Pickle file: 
+    - Run the Machine Learning pipeline that trains the classifier and saves the model as a Pickle file: 
     
     ```python3 train_classifier.py ../models/DisasterResponseDB models/classifier.pkl```
+
+### Dependencies
+- Python 3.5+ (I used Python 3.6.11)
+- Machine Learning Libraries: NumPy, SciPy, Pandas, Sciki-Learn
+- Natural Language Process Libraries: NLTK
+- SQLlite Database Libraqries: SQLalchemy
+- Web Scraping Libraries: BeautifulSoup, Requests/Regex
+- Web App and Data Visualization: Flask, Plotly
+- Model Loading and Saving Library: Pickle
+
+### Other Files
+app/templates/: Templates for the web app.
+app/run.py: Start the Python server for the web app and prepare visualizations.
+
+### Author 
+[https://github.com/brothercast](Tone Pettit)
