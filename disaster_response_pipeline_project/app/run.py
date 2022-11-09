@@ -1,6 +1,5 @@
-# Import libraries
+
 import json
-import joblib
 import plotly
 import pandas as pd
 
@@ -10,19 +9,13 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
+from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
-# Define the app
+
 app = Flask(__name__)
 
 def tokenize(text):
-    """
-    Tokenize text
-    Args:
-        text: text to be tokenized
-    Returns:
-        clean_tokens: list of cleaned tokens
-    """
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -35,10 +28,12 @@ def tokenize(text):
 
 # load data
 engine = create_engine('sqlite:///../data/DisasterResponse.db')
-df = pd.read_sql_table('DisasterResponse', engine)
+print('ENGINE: ',engine)
+df = pd.read_sql_table("DisasterResponse", engine)
 
 # load model
 model = joblib.load("../models/classifier.pkl")
+
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
@@ -53,7 +48,8 @@ def index():
     cat_num = df.drop(['id', 'message', 'original', 'genre'], axis = 1).sum()
     cat_num = cat_num.sort_values(ascending = False)
     cat = list(cat_num.index)
-  
+
+        
     # create visuals
     graphs = [
         {

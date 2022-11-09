@@ -91,9 +91,11 @@ def build_model():
     ])
         
     parameters = {
-            'clf__estimator__n_estimators': [5],  # Decision Tree Classifer is also tried here to generate a more accurace model
+            'clf__estimator__n_estimators': [50],  # Decision Tree Classifer is also tried here to generate a more accurace model
             'clf__estimator__criterion': ['gini'],
-            'clf__estimator__min_samples_split':[2]
+            'clf__estimator__min_samples_split':[2],
+            'vect__max_df': [0.25,0.5,0.75],
+            'vect__ngram_range':[(1,3),(1,4)],
              }
     
     model = GridSearchCV(pipeline, param_grid=parameters, scoring='precision_samples')
